@@ -1,8 +1,0 @@
-// This file is a placeholder for assets
-// In a real app, you would replace these with actual image files
-
-export const PLACEHOLDER_ICON = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiBmaWxsPSIjMjU2M2ViIi8+CjxwYXRoIGQ9Ik01MTIgMzAwQzQ1MC42IDMwMCA0MDAgMzUwLjYgNDAwIDQxMlM0NTAuNiA1MjQgNTEyIDUyNFM2MjQgNDczLjQgNjI0IDQxMlM1NzMuNCAzMDAgNTEyIDMwMFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik01MTIgNTc2QzM2NyA1NzYgMjUwIDY5MyAyNTAgODM4VjkwMEg3NzRWODM4Qzc3NCA2OTMgNjU3IDU3NiA1MTIgNTc2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==';
-
-export default {
-  PLACEHOLDER_ICON,
-};

@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import {
   scaleWidth,
   scaleHeight,
@@ -9,17 +9,23 @@ import {
   getBorderRadius,
   getIconSize,
   isSmallScreen,
-} from '../utils/responsive';
+} from "../utils/responsive";
 
 const StatsCard = ({ title, value, color, icon, fullWidth = true }) => {
   return (
-    <View style={[
-      styles.container,
-      { backgroundColor: color },
-      fullWidth ? styles.fullWidth : styles.halfWidth
-    ]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: color },
+        fullWidth ? styles.fullWidth : styles.halfWidth,
+      ]}
+    >
       <View style={styles.iconContainer}>
-        <Ionicons name={icon} size={getIconSize(20)} color="rgba(255,255,255,0.8)" />
+        <Ionicons
+          name={icon}
+          size={getIconSize(20)}
+          color="rgba(255,255,255,0.8)"
+        />
       </View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.value}>{value}</Text>
@@ -32,27 +38,29 @@ const styles = StyleSheet.create({
     borderRadius: getBorderRadius(12),
     padding: scaleWidth(15),
     minHeight: scaleHeight(isSmallScreen() ? 100 : 120),
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   fullWidth: {
     flex: 1,
+    width: "100%",
   },
   halfWidth: {
     flex: 1,
+    maxWidth: "48%",
   },
   iconContainer: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   title: {
-    fontSize: scaleFont(12),
-    color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
+    fontSize: scaleFont(10),
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "500",
     marginBottom: getSpacing(0.3),
   },
   value: {
-    fontSize: scaleFont(isSmallScreen() ? 24 : 32),
-    color: '#ffffff',
-    fontWeight: 'bold',
+    fontSize: scaleFont(isSmallScreen() ? 14 : 16),
+    color: "#ffffff",
+    fontWeight: "bold",
   },
 });
 

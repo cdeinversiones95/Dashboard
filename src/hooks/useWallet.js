@@ -117,7 +117,7 @@ export const useWallet = () => {
   // MÉTODOS DE TRANSACCIONES
   // =========================================
 
-  const requestDeposit = async (amount, paymentReference = '') => {
+  const requestDeposit = async (amount, paymentReference = '', paymentMethodType = 'bank_transfer') => {
     if (!user?.id) {
       return { error: 'Usuario no autenticado', data: null };
     }
@@ -127,7 +127,8 @@ export const useWallet = () => {
         user.id, 
         amount, 
         null, 
-        paymentReference
+        paymentReference,
+        paymentMethodType
       );
 
       if (result.error) {
@@ -147,18 +148,17 @@ export const useWallet = () => {
     }
   };
 
-  const requestWithdrawal = async (amount, userNotes = '') => {
-    if (!user?.id || !wallet?.id) {
-      return { error: 'Usuario o billetera no disponible', data: null };
+  const requestWithdrawal = async (amount, paymentDetails, paymentMethodType = 'bank_transfer') => {
+    if (!user?.id) {
+      return { error: 'Usuario no autenticado', data: null };
     }
 
     try {
       const result = await WalletService.requestWithdrawal(
         user.id,
-        wallet.id,
         amount,
-        null,
-        userNotes
+        paymentDetails,
+        paymentMethodType
       );
 
       if (result.error) {
@@ -204,25 +204,32 @@ export const useWallet = () => {
       loadPendingDeposits();
       loadWithdrawals();
     }
-  }, [user?.id, loadWallet, loadPendingDeposits, loadWithdrawals]);
+  }, [user?.id]);
 
   // Auto-refresh del balance cada 30 segundos
   useEffect(() => {
     if (!user?.id) return;
 
     const interval = setInterval(() => {
-      loadBalance();
+      if (user?.id) {
+        loadBalance();
+      }
     }, 30000); // 30 segundos
 
     return () => clearInterval(interval);
-  }, [user?.id, loadBalance]);
+  }, [user?.id]); // Removido loadBalance para evitar ciclos infinitos
 
   // =========================================
   // HELPERS Y GETTERS
   // =========================================
 
+  // ✅ Formatear balance como pesos dominicanos
   const getFormattedBalance = (amount = balance) => {
-    return `$${parseFloat(amount || 0).toFixed(2)}`;
+    const parsedAmount = parseFloat(amount || 0);
+    return `RD$${parsedAmount.toLocaleString('es-DO', { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
   };
 
   const getTransactionsByType = (type) => {
@@ -230,11 +237,38 @@ export const useWallet = () => {
   };
 
   const getTotalDeposited = () => {
-    return wallet?.total_deposited || 0;
+    // Calcular total de depósitos basado en transacciones
+    const depositTransactions = transactions.filter(transaction => {
+      const type = transaction.transaction_type;
+      return type === 'deposit' || 
+             type === 'bank_transfer' ||
+             type === 'usdt_transfer' ||
+             type === 'recharge' ||
+             type === 'top_up';
+    });
+    
+    const total = depositTransactions.reduce((total, transaction) => {
+      return total + parseFloat(transaction.amount || 0);
+    }, 0);
+    
+    return total;
   };
 
   const getTotalWithdrawn = () => {
-    return wallet?.total_withdrawn || 0;
+    // Calcular total de retiros basado en transacciones
+    const withdrawalTransactions = transactions.filter(transaction => {
+      const type = transaction.transaction_type;
+      return type === 'withdrawal' || 
+             type === 'withdraw' ||
+             type === 'cash_out' ||
+             type === 'payout';
+    });
+    
+    const total = withdrawalTransactions.reduce((total, transaction) => {
+      return total + parseFloat(transaction.amount || 0);
+    }, 0);
+    
+    return total;
   };
 
   const getTotalInvested = () => {

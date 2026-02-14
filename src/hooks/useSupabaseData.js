@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import StatsService from '../services/StatsService';
-import InvestmentService from '../services/InvestmentService';
-import { useAuth } from '../contexts/AuthContext';
+import { useState, useEffect } from "react";
+import StatsService from "../services/StatsService";
+import InvestmentService from "../services/InvestmentService";
+import { useAuth } from "../contexts/AuthContext";
 
 export const useSupabaseData = () => {
   const [globalStats, setGlobalStats] = useState(null);
@@ -21,15 +21,15 @@ export const useSupabaseData = () => {
         setGlobalStats(result.data);
       }
     } catch (err) {
-      setError('Error cargando estadísticas globales');
-      console.error('Error:', err);
+      setError("Error cargando estadísticas globales");
+      console.error("Error:", err);
     }
   };
 
   // Cargar estadísticas del usuario
   const loadUserStats = async () => {
     if (!user?.id) return;
-    
+
     try {
       const result = await StatsService.getUserStats(user.id);
       if (result.error) {
@@ -38,15 +38,15 @@ export const useSupabaseData = () => {
         setUserStats(result.data);
       }
     } catch (err) {
-      setError('Error cargando estadísticas del usuario');
-      console.error('Error:', err);
+      setError("Error cargando estadísticas del usuario");
+      console.error("Error:", err);
     }
   };
 
   // Cargar inversiones del usuario
   const loadUserInvestments = async () => {
     if (!user?.id) return;
-    
+
     try {
       const result = await InvestmentService.getUserInvestments(user.id, 10);
       if (result.error) {
@@ -55,15 +55,15 @@ export const useSupabaseData = () => {
         setUserInvestments(result.data);
       }
     } catch (err) {
-      setError('Error cargando inversiones del usuario');
-      console.error('Error:', err);
+      setError("Error cargando inversiones del usuario");
+      console.error("Error:", err);
     }
   };
 
   // Crear nueva inversión
   const createInvestment = async (investmentData) => {
     if (!user?.id) {
-      return { data: null, error: 'Usuario no autenticado' };
+      return { data: null, error: "Usuario no autenticado" };
     }
 
     try {
@@ -71,36 +71,39 @@ export const useSupabaseData = () => {
         ...investmentData,
         user_id: user.id,
       });
-      
+
       if (result.data && !result.error) {
         // Recargar datos después de crear la inversión
         await loadUserStats();
         await loadUserInvestments();
         await loadGlobalStats();
       }
-      
+
       return result;
     } catch (err) {
-      console.error('Error creando inversión:', err);
-      return { data: null, error: 'Error creando inversión' };
+      console.error("Error creando inversión:", err);
+      return { data: null, error: "Error creando inversión" };
     }
   };
 
   // Actualizar inversión
   const updateInvestment = async (investmentId, updates) => {
     try {
-      const result = await InvestmentService.updateInvestment(investmentId, updates);
-      
+      const result = await InvestmentService.updateInvestment(
+        investmentId,
+        updates,
+      );
+
       if (result.data && !result.error) {
         // Recargar datos después de actualizar
         await loadUserInvestments();
         await loadUserStats();
       }
-      
+
       return result;
     } catch (err) {
-      console.error('Error actualizando inversión:', err);
-      return { data: null, error: 'Error actualizando inversión' };
+      console.error("Error actualizando inversión:", err);
+      return { data: null, error: "Error actualizando inversión" };
     }
   };
 
@@ -108,7 +111,7 @@ export const useSupabaseData = () => {
   const loadAllData = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       await Promise.all([
         loadGlobalStats(),
@@ -116,8 +119,8 @@ export const useSupabaseData = () => {
         user?.id ? loadUserInvestments() : Promise.resolve(),
       ]);
     } catch (err) {
-      setError('Error cargando datos');
-      console.error('Error loading all data:', err);
+      setError("Error cargando datos");
+      console.error("Error loading all data:", err);
     } finally {
       setLoading(false);
     }
@@ -126,7 +129,8 @@ export const useSupabaseData = () => {
   // Efecto para cargar datos iniciales
   useEffect(() => {
     loadAllData();
-  }, [user?.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]); // loadAllData se omite intencionalmente para evitar ciclos infinitos
 
   // Efecto para suscribirse a cambios en tiempo real
   useEffect(() => {
@@ -136,11 +140,10 @@ export const useSupabaseData = () => {
     const subscription = InvestmentService.subscribeToInvestments(
       user.id,
       (payload) => {
-        console.log('Cambio en inversiones:', payload);
         // Recargar datos cuando hay cambios
         loadUserInvestments();
         loadUserStats();
-      }
+      },
     );
 
     return () => {
@@ -160,12 +163,12 @@ export const useSupabaseData = () => {
     userInvestments,
     loading,
     error,
-    
+
     // Acciones
     createInvestment,
     updateInvestment,
     refreshData,
-    
+
     // Funciones de carga
     loadGlobalStats,
     loadUserStats,

@@ -2,17 +2,22 @@
   "expo": {
     "name": "CDE INVERSIONES",
     "slug": "cde-inversiones",
-    "version": "1.0.0",
+    "version": "1.0.3",
+    "icon": "./assets/icon.png",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "updates": {
+      "url": "https://u.expo.dev/09df971a-d3b3-481b-9bf7-a737d86596a0"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#2563eb"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
+
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.cde.inversiones",
@@ -23,24 +28,39 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#2563eb"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       },
+      "versionCode": 2,
       "package": "com.cde.inversiones",
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
-        "CAMERA"
+        "CAMERA",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
       ]
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "La aplicación necesita acceso a tus fotos para subir los comprobantes de pago.",
+          "cameraPermission": "La aplicación necesita acceso a tu cámara para tomar fotos de los comprobantes."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Permite usar FaceID para iniciar sesión rápidamente."
+        }
+      ]
+    ],
     "web": {
       "bundler": "metro"
     },
     "scheme": "cde-inversiones",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "sdkVersion": "54.0.0",
     "extra": {
       "eas": {
