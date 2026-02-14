@@ -1,7 +1,7 @@
 [build]
   base = "IGF-Admin-Dashboard"
   command = "npm install && npm run build"
-  publish = "IGF-Admin-Dashboard/.next"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
