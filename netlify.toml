@@ -1,0 +1,10 @@
+[build]
+  base = "IGF-Admin-Dashboard"
+  command = "npm install && npm run build"
+  publish = "IGF-Admin-Dashboard/.next"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
